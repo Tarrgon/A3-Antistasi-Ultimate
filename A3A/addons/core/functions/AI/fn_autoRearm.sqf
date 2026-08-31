@@ -43,7 +43,7 @@ _nearbyContainers = nearestObjects [_unit, ["ReammoBox_F","LandVehicle","WeaponH
 if (boxX in _nearbyContainers) then {_nearbyContainers = _nearbyContainers - [boxX]};
 
 
-if ((!isNil "_customLoadout" && {_primaryWeapon != _loadoutPrimaryWeapon}) || {isNil "_customLoadout"}) then {
+if ((!isNil "_customLoadout" && {!isNil "_loadoutPrimaryWeapon"} && {_primaryWeapon != _loadoutPrimaryWeapon}) || {isNil "_customLoadout" || {isNil "_loadoutPrimaryWeapon"}}) then {
 	_needsRearm = true;
 	if (count _nearbyContainers > 0) then {
 		{

@@ -127,6 +127,16 @@ private _fnc_hasMags = {
     (_compatibleMags arrayIntersect _unitMags) isNotEqualTo [];
 };
 
+private _fnc_isValidItemType = {
+    params ["_itemType"];
+
+    if (isNil "_itemType") exitWith { false };
+
+    if (_itemType isEqualType [] && { isNil { _itemType select 0 } }) exitWith { false };
+
+    true;
+};
+
 private _fnc_addPrimary = {
     params ["_unit", "_overrideClass"];
 
@@ -147,7 +157,7 @@ private _fnc_addPrimary = {
         default { 50 };
     };
     
-    if (isNil "_weaponType" || {_weaponType isEqualTo []}) exitWith {};
+    if (!([_weaponType] call _fnc_isValidItemType)) exitWith {};
     private _hasMags = !(_weaponType in keys A3A_rebelGear) && {[_unit, _weaponType] call _fnc_hasMags};
     [_unit, _weaponType, [_totalMagWeight, 0] select (_hasMags)] call A3A_fnc_randomWeapon;
 };
@@ -176,7 +186,7 @@ private _fnc_addSecondary = {
         _overrideClass;
     };
 
-    if (isNil "_weapon" || {_weapon isEqualTo []}) exitWith {};
+    if (isNil "_weapon" || { !([_weapon] call _fnc_isValidItemType) }) exitWith {};
     private _hasMags = [_unit, _weapon] call _fnc_hasMags;
     [_unit, _weapon, [100, 0] select (_hasMags)] call A3A_fnc_randomWeapon;
 };
@@ -185,8 +195,7 @@ private _fnc_addHandgun = {
     params ["_unit", "_overrideClass"];
 
     private _weaponType = if !(isNil "_overrideClass") then { _overrideClass } else { "Handguns" };
-    
-    if (isNil "_weaponType" || {_weaponType isEqualTo []}) exitWith {};
+    if (!([_weaponType] call _fnc_isValidItemType)) exitWith {};
     private _hasMags = !(_weaponType in keys A3A_rebelGear) && {[_unit, _weaponType] call _fnc_hasMags};
     [_unit, _weaponType, [10, 0] select (_hasMags)] call A3A_fnc_randomWeapon;
 };
@@ -196,7 +205,7 @@ private _fnc_addBinoculars = {
 
     if (isNil "_overrideClass" && (_typeTag isNotEqualTo "SquadLeader")) exitWith {};
     private _binoType = if !(isNil "_overrideClass") then { _overrideClass } else { "Binocular" };
-    if (_binoType isEqualTo []) exitWith {};
+    if (!([_binoType] call _fnc_isValidItemType)) exitWith {};
     [_unit, _binoType, 5] call A3A_fnc_randomWeapon;
 };
 
